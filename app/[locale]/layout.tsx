@@ -32,6 +32,8 @@ const inter = Inter({
   display: "swap",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jotavms.vercel.app";
+
 export const metadata: Metadata = {
   title: {
     default: "João Vitor Matos · Da curiosidade ao dashboard",
@@ -39,20 +41,38 @@ export const metadata: Metadata = {
   },
   description:
     "Analista de dados em construção. Dashboards, análises e processos com curiosidade aplicada.",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://jotavms.vercel.app"
-  ),
+  metadataBase: new URL(siteUrl),
   openGraph: {
-    type: "website",
-    locale: "pt_BR",
+    title: "João Vitor Matos · Da curiosidade ao dashboard",
+    description: "Analista de dados em construção. Dashboards, análises e processos com curiosidade aplicada.",
+    url: siteUrl,
     siteName: "João Vitor Matos",
+    images: [
+      {
+        url: `/og?title=Da+curiosidade+ao+dashboard&subtitle=Analista+de+dados+em+constru%C3%A7%C3%A3o`,
+        width: 1200,
+        height: 630,
+        alt: "João Vitor Matos — portfólio",
+      },
+    ],
+    locale: "pt_BR",
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",
+    title: "João Vitor Matos · Da curiosidade ao dashboard",
+    description: "Analista de dados em construção. Dashboards, análises e processos com curiosidade aplicada.",
+    images: [`/og?title=Da+curiosidade+ao+dashboard`],
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: { index: true, follow: true },
   },
 };
 
