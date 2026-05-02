@@ -1,23 +1,489 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard — ecommerce</title>
-  <style>
-    body { margin: 0; background: #0a0e14; color: #e6e9ef; font-family: monospace;
-           display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-    .msg { text-align: center; border: 1px solid #00b4a6; padding: 2rem 3rem; border-radius: 4px; }
-    .label { color: #00b4a6; font-size: 0.75rem; letter-spacing: 0.1em; margin-bottom: 1rem; }
-    h1 { font-size: 1.25rem; margin: 0 0 0.5rem; }
-    p { color: #8b95a7; font-size: 0.875rem; margin: 0; }
-  </style>
+<meta charset="UTF-8">
+<title>Nexus Commerce · Sales Intelligence 2024</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --pink:    #FF6B9D;
+  --violet:  #9B6BFF;
+  --cyan:    #00E5CC;
+  --amber:   #FFB547;
+  --blue:    #4D9FFF;
+  --green:   #4DFFB4;
+  --white:   #FFFFFF;
+  --glass:   rgba(255,255,255,0.07);
+  --glass2:  rgba(255,255,255,0.12);
+  --border:  rgba(255,255,255,0.13);
+  --border2: rgba(255,255,255,0.22);
+  --text:    #F0EEFF;
+  --muted:   rgba(240,238,255,0.5);
+  --muted2:  rgba(240,238,255,0.3);
+}
+
+body {
+  min-height: 100vh;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--text);
+  width: 1300px;
+  margin: 0 auto;
+  padding: 40px 44px 52px;
+  position: relative;
+  background: #0A0718;
+  overflow-x: hidden;
+}
+
+/* ── GRADIENT BG ── */
+.bg-layer {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(100,40,200,0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 10%,  rgba(255,60,120,0.35) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 60% at 80% 90%,  rgba(0,180,200,0.3)  0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 20% 80%,  rgba(80,60,220,0.4)  0%, transparent 55%),
+    #0A0718;
+}
+.bg-grain {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+.content { position: relative; z-index: 2; }
+
+/* ── GLASS CARD ── */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.glass::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+}
+.glass-strong {
+  background: var(--glass2);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+}
+
+/* ── HEADER ── */
+.header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 30px;
+  animation: fadeDown .6s ease both;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-icon {
+  width: 42px; height: 42px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--violet), var(--pink));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 0 24px rgba(155,107,255,0.5);
+}
+.brand-name { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.brand-tagline { font-family: 'Fraunces', serif; font-size: 15px; font-style: italic; font-weight: 300; color: var(--text); margin-top: 1px; }
+.header-center {}
+h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 38px; font-weight: 600; line-height: 1.1;
+  background: linear-gradient(135deg, #fff 0%, rgba(200,180,255,0.9) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  text-align: center;
+}
+.subtitle { color: var(--muted); font-size: 13px; text-align: center; margin-top: 4px; }
+.header-right { display: flex; gap: 10px; }
+.pill {
+  padding: 7px 16px; border-radius: 30px; font-size: 12px; font-weight: 600;
+  backdrop-filter: blur(12px); border: 1px solid var(--border2);
+}
+.pill-violet { background: rgba(155,107,255,0.2); color: var(--violet); border-color: rgba(155,107,255,0.35); }
+.pill-cyan   { background: rgba(0,229,204,0.15);  color: var(--cyan);   border-color: rgba(0,229,204,0.3); }
+
+/* ── GRID ── */
+.grid-top  { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 14px; }
+.grid-mid  { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.grid-bot  { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 14px; }
+
+/* ── KPI CARD ── */
+.kpi {
+  padding: 22px 22px 18px;
+  opacity: 0; transform: translateY(14px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.kpi.show { opacity: 1; transform: translateY(0); }
+.kpi-icon { font-size: 20px; margin-bottom: 12px; }
+.kpi-label { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.kpi-value { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 600; line-height: 1; }
+.kpi-footer { display: flex; align-items: center; gap: 7px; margin-top: 8px; }
+.badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+.badge-up   { background: rgba(77,255,180,0.15); color: var(--green); }
+.badge-down { background: rgba(255,107,157,0.15); color: var(--pink); }
+.kpi-sub { font-size: 10px; color: var(--muted2); }
+
+/* glow accent line on kpi */
+.kpi-glow::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; border-radius: 0 0 20px 20px;
+}
+.gv::after { background: linear-gradient(90deg, transparent, var(--violet), transparent); box-shadow: 0 0 10px var(--violet); }
+.gp::after { background: linear-gradient(90deg, transparent, var(--pink),   transparent); box-shadow: 0 0 10px var(--pink); }
+.gc::after { background: linear-gradient(90deg, transparent, var(--cyan),   transparent); box-shadow: 0 0 10px var(--cyan); }
+.ga::after { background: linear-gradient(90deg, transparent, var(--amber),  transparent); box-shadow: 0 0 10px var(--amber); }
+
+/* ── CHART CARDS ── */
+.card {
+  padding: 24px 24px 20px;
+  opacity: 0; transform: translateY(14px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.card.show { opacity: 1; transform: translateY(0); }
+.card-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.card-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin-bottom: 18px; }
+.cw { position: relative; width: 100%; }
+.h210 { height: 210px; }
+.h175 { height: 175px; }
+.h155 { height: 155px; }
+
+/* ── CATEGORY LIST ── */
+.cat-list { display: flex; flex-direction: column; gap: 11px; margin-top: 4px; }
+.cat-row { display: flex; align-items: center; gap: 10px; }
+.cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.cat-name { flex: 1; font-size: 12px; font-weight: 500; color: var(--text); }
+.cat-bar-track { flex: 1.5; background: rgba(255,255,255,0.07); border-radius: 4px; height: 6px; overflow: hidden; }
+.cat-bar-fill { height: 100%; border-radius: 4px; }
+.cat-pct { font-size: 12px; font-weight: 700; width: 34px; text-align: right; }
+
+/* ── FUNNEL ── */
+.funnel { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; }
+.f-row { display: flex; flex-direction: column; gap: 3px; }
+.f-top { display: flex; justify-content: space-between; }
+.f-name { font-size: 11px; color: var(--muted); }
+.f-num  { font-size: 11px; font-weight: 700; color: var(--text); }
+.f-track { background: rgba(255,255,255,0.07); border-radius: 4px; height: 8px; overflow: hidden; }
+.f-fill { height: 100%; border-radius: 4px; }
+
+/* ── TOP PRODUCTS ── */
+.prod-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.prod-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; }
+.prod-rank { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--muted2); width: 22px; }
+.prod-info { flex: 1; }
+.prod-name { font-size: 12px; font-weight: 600; }
+.prod-cat  { font-size: 10px; color: var(--muted); margin-top: 1px; }
+.prod-rev  { text-align: right; }
+.prod-rev-val { font-size: 13px; font-weight: 700; }
+.prod-rev-chg { font-size: 10px; margin-top: 1px; }
+
+/* ── FOOTER ── */
+.footer { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.foot-l { font-size: 11px; color: var(--muted2); }
+.foot-r { font-size: 11px; font-weight: 700; letter-spacing: .08em; background: linear-gradient(90deg, var(--violet), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+@keyframes fadeDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:none} }
+</style>
 </head>
 <body>
-  <div class="msg">
-    <div class="label">// PLACEHOLDER</div>
-    <h1>Dashboard · ecommerce</h1>
-    <p>Cole seu arquivo <code>ecommerce.html</code> aqui.<br>Veja SETUP.md para instruções.</p>
+<div class="bg-layer"></div>
+<div class="bg-grain"></div>
+
+<div class="content">
+
+<!-- HEADER -->
+<header class="header">
+  <div class="brand">
+    <div class="brand-icon">✦</div>
+    <div>
+      <div class="brand-name">Nexus Commerce</div>
+      <div class="brand-tagline">Sales Intelligence</div>
+    </div>
   </div>
+  <div>
+    <h1>E-commerce Analytics</h1>
+    <p class="subtitle">Consolidado Anual · FY 2024 · Brasil</p>
+  </div>
+  <div class="header-right">
+    <span class="pill pill-violet">● Ao vivo</span>
+    <span class="pill pill-cyan">FY 2024</span>
+  </div>
+</header>
+
+<!-- KPIs -->
+<div class="grid-top">
+  <div class="glass kpi kpi-glow gv" data-i="0">
+    <div class="kpi-icon">💎</div>
+    <p class="kpi-label">GMV Total</p>
+    <p class="kpi-value" style="background:linear-gradient(135deg,#fff,var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">R$148M</p>
+    <div class="kpi-footer"><span class="badge badge-up">+41%</span><span class="kpi-sub">vs. ano anterior</span></div>
+  </div>
+  <div class="glass kpi kpi-glow gp" data-i="1">
+    <div class="kpi-icon">🛒</div>
+    <p class="kpi-label">Pedidos</p>
+    <p class="kpi-value" style="background:linear-gradient(135deg,#fff,var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">312K</p>
+    <div class="kpi-footer"><span class="badge badge-up">+28%</span><span class="kpi-sub">pedidos aprovados</span></div>
+  </div>
+  <div class="glass kpi kpi-glow gc" data-i="2">
+    <div class="kpi-icon">📊</div>
+    <p class="kpi-label">Conversão</p>
+    <p class="kpi-value" style="background:linear-gradient(135deg,#fff,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">3.8%</p>
+    <div class="kpi-footer"><span class="badge badge-up">+0.9pp</span><span class="kpi-sub">benchmark: 2.9%</span></div>
+  </div>
+  <div class="glass kpi kpi-glow ga" data-i="3">
+    <div class="kpi-icon">🎯</div>
+    <p class="kpi-label">Ticket Médio</p>
+    <p class="kpi-value" style="background:linear-gradient(135deg,#fff,var(--amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">R$475</p>
+    <div class="kpi-footer"><span class="badge badge-up">+11%</span><span class="kpi-sub">vs. ano anterior</span></div>
+  </div>
+</div>
+
+<!-- MID ROW -->
+<div class="grid-mid">
+
+  <!-- GMV trend -->
+  <div class="glass card" data-i="4">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+      <div>
+        <p class="card-eyebrow">Receita</p>
+        <p class="card-title" style="margin-bottom:0">GMV Mensal 2024</p>
+      </div>
+      <div style="display:flex;gap:18px;margin-top:4px">
+        <div style="text-align:right"><div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--violet)">R$18.2M</div><div style="font-size:10px;color:var(--muted)">melhor mês (Dez)</div></div>
+        <div style="text-align:right"><div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--cyan)">R$7.4M</div><div style="font-size:10px;color:var(--muted)">menor mês (Jan)</div></div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px"></div>
+    <div class="cw h210"><canvas id="gmvChart"></canvas></div>
+  </div>
+
+  <!-- Categories -->
+  <div class="glass card" data-i="5">
+    <p class="card-eyebrow">Mix</p>
+    <p class="card-title">Receita por Categoria</p>
+    <div class="cat-list">
+      <div class="cat-row"><div class="cat-dot" style="background:var(--violet)"></div><span class="cat-name">Eletrônicos</span><div class="cat-bar-track"><div class="cat-bar-fill" style="width:100%;background:var(--violet)"></div></div><span class="cat-pct" style="color:var(--violet)">34%</span></div>
+      <div class="cat-row"><div class="cat-dot" style="background:var(--pink)"></div><span class="cat-name">Moda & Beleza</span><div class="cat-bar-track"><div class="cat-bar-fill" style="width:65%;background:var(--pink)"></div></div><span class="cat-pct" style="color:var(--pink)">22%</span></div>
+      <div class="cat-row"><div class="cat-dot" style="background:var(--cyan)"></div><span class="cat-name">Casa & Deco</span><div class="cat-bar-track"><div class="cat-bar-fill" style="width:53%;background:var(--cyan)"></div></div><span class="cat-pct" style="color:var(--cyan)">18%</span></div>
+      <div class="cat-row"><div class="cat-dot" style="background:var(--amber)"></div><span class="cat-name">Esportes</span><div class="cat-bar-track"><div class="cat-bar-fill" style="width:38%;background:var(--amber)"></div></div><span class="cat-pct" style="color:var(--amber)">13%</span></div>
+      <div class="cat-row"><div class="cat-dot" style="background:var(--blue)"></div><span class="cat-name">Alimentação</span><div class="cat-bar-track"><div class="cat-bar-fill" style="width:24%;background:var(--blue)"></div></div><span class="cat-pct" style="color:var(--blue)">8%</span></div>
+      <div class="cat-row"><div class="cat-dot" style="background:rgba(255,255,255,0.25)"></div><span class="cat-name">Outros</span><div class="cat-bar-track"><div class="cat-bar-fill" style="width:15%;background:rgba(255,255,255,0.2)"></div></div><span class="cat-pct" style="color:var(--muted)">5%</span></div>
+    </div>
+  </div>
+
+  <!-- Funnel -->
+  <div class="glass card" data-i="6">
+    <p class="card-eyebrow">Conversão</p>
+    <p class="card-title">Funil de Vendas</p>
+    <div class="funnel">
+      <div class="f-row"><div class="f-top"><span class="f-name">Visitantes únicos</span><span class="f-num">8.2M</span></div><div class="f-track"><div class="f-fill" style="width:100%;background:linear-gradient(90deg,var(--violet),var(--pink))"></div></div></div>
+      <div class="f-row"><div class="f-top"><span class="f-name">Visualizaram produto</span><span class="f-num">3.4M · 41%</span></div><div class="f-track"><div class="f-fill" style="width:41%;background:var(--violet)"></div></div></div>
+      <div class="f-row"><div class="f-top"><span class="f-name">Adicionaram ao carrinho</span><span class="f-num">960K · 12%</span></div><div class="f-track"><div class="f-fill" style="width:12%;background:var(--blue)"></div></div></div>
+      <div class="f-row"><div class="f-top"><span class="f-name">Iniciaram checkout</span><span class="f-num">470K · 5.7%</span></div><div class="f-track"><div class="f-fill" style="width:5.7%;background:var(--cyan)"></div></div></div>
+      <div class="f-row"><div class="f-top"><span class="f-name">Pedido aprovado</span><span class="f-num">312K · 3.8%</span></div><div class="f-track"><div class="f-fill" style="width:3.8%;background:var(--green)"></div></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM ROW -->
+<div class="grid-bot">
+
+  <!-- Orders + CAC -->
+  <div class="glass card" data-i="7">
+    <p class="card-eyebrow">Performance</p>
+    <p class="card-title">Pedidos & CAC Trimestral</p>
+    <div class="cw h175"><canvas id="ordersChart"></canvas></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px">
+      <div style="padding:10px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:3px">CAC Médio</div>
+        <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--amber)">R$38</div>
+        <div style="font-size:10px;color:var(--green);margin-top:2px">↓ 22% vs 2023</div>
+      </div>
+      <div style="padding:10px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:3px">LTV Médio</div>
+        <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--cyan)">R$820</div>
+        <div style="font-size:10px;color:var(--green);margin-top:2px">LTV/CAC: 21.6x</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Devices donut -->
+  <div class="glass card" data-i="8">
+    <p class="card-eyebrow">Canais</p>
+    <p class="card-title">Acesso por Dispositivo</p>
+    <div class="cw h155"><canvas id="deviceChart"></canvas></div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;align-items:center;gap:7px"><div style="width:8px;height:8px;border-radius:50%;background:var(--violet)"></div><span style="font-size:12px;color:var(--muted)">Mobile App</span></div>
+        <span style="font-size:12px;font-weight:700">58%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;align-items:center;gap:7px"><div style="width:8px;height:8px;border-radius:50%;background:var(--cyan)"></div><span style="font-size:12px;color:var(--muted)">Desktop Web</span></div>
+        <span style="font-size:12px;font-weight:700">28%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;align-items:center;gap:7px"><div style="width:8px;height:8px;border-radius:50%;background:var(--pink)"></div><span style="font-size:12px;color:var(--muted)">Mobile Web</span></div>
+        <span style="font-size:12px;font-weight:700">14%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top products -->
+  <div class="glass card" data-i="9">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+      <div>
+        <p class="card-eyebrow">Ranking</p>
+        <p class="card-title" style="margin-bottom:12px">Top Produtos por Receita</p>
+      </div>
+    </div>
+    <div class="prod-list">
+      <div class="prod-row">
+        <span class="prod-rank">01</span>
+        <div class="prod-info"><div class="prod-name">iPhone 15 Pro Max 256GB</div><div class="prod-cat">Eletrônicos · Apple</div></div>
+        <div class="prod-rev"><div class="prod-rev-val" style="color:var(--violet)">R$4.2M</div><div class="prod-rev-chg" style="color:var(--green)">+62%</div></div>
+      </div>
+      <div class="prod-row">
+        <span class="prod-rank">02</span>
+        <div class="prod-info"><div class="prod-name">Samsung Galaxy S24 Ultra</div><div class="prod-cat">Eletrônicos · Samsung</div></div>
+        <div class="prod-rev"><div class="prod-rev-val" style="color:var(--pink)">R$3.8M</div><div class="prod-rev-chg" style="color:var(--green)">+48%</div></div>
+      </div>
+      <div class="prod-row">
+        <span class="prod-rank">03</span>
+        <div class="prod-info"><div class="prod-name">Kit Skincare Luxe Premium</div><div class="prod-cat">Beleza · L'Oréal</div></div>
+        <div class="prod-rev"><div class="prod-rev-val" style="color:var(--cyan)">R$2.1M</div><div class="prod-rev-chg" style="color:var(--green)">+91%</div></div>
+      </div>
+      <div class="prod-row">
+        <span class="prod-rank">04</span>
+        <div class="prod-info"><div class="prod-name">Smart TV 65" QLED 4K</div><div class="prod-cat">Eletrônicos · Samsung</div></div>
+        <div class="prod-rev"><div class="prod-rev-val" style="color:var(--amber)">R$1.9M</div><div class="prod-rev-chg" style="color:var(--pink)">-4%</div></div>
+      </div>
+      <div class="prod-row">
+        <span class="prod-rank">05</span>
+        <div class="prod-info"><div class="prod-name">Tênis Running Air Pro</div><div class="prod-cat">Esportes · Nike</div></div>
+        <div class="prod-rev"><div class="prod-rev-val" style="color:var(--blue)">R$1.6M</div><div class="prod-rev-chg" style="color:var(--green)">+33%</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span class="foot-l">Dados fictícios criados para fins demonstrativos · Nexus Commerce FY2024</span>
+  <span class="foot-r">✦ NEXUS · SALES INTELLIGENCE</span>
+</div>
+
+</div><!-- /content -->
+
+<script>
+  document.querySelectorAll('[data-i]').forEach(el => {
+    setTimeout(() => el.classList.add('show'), 60 + parseInt(el.dataset.i) * 75);
+  });
+
+  Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+  Chart.defaults.color = 'rgba(240,238,255,0.45)';
+
+  const gridColor = 'rgba(255,255,255,0.06)';
+  const tip = {
+    backgroundColor: 'rgba(15,10,30,0.92)',
+    borderColor: 'rgba(155,107,255,0.3)',
+    borderWidth: 1,
+    titleColor: 'rgba(240,238,255,0.5)',
+    bodyColor: '#F0EEFF',
+    padding: 12, cornerRadius: 10
+  };
+
+  // GMV Chart
+  new Chart('gmvChart', {
+    type: 'line',
+    data: {
+      labels: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+      datasets: [
+        {
+          label: 'GMV',
+          data: [7.4,8.1,9.2,10.4,11.2,12.0,11.6,12.8,13.5,14.2,16.4,18.2].map(v=>v*1e6),
+          borderColor: 'rgba(155,107,255,1)',
+          borderWidth: 2.5,
+          backgroundColor: (ctx) => {
+            const g = ctx.chart.ctx.createLinearGradient(0,0,0,220);
+            g.addColorStop(0,'rgba(155,107,255,0.25)');
+            g.addColorStop(1,'rgba(155,107,255,0)');
+            return g;
+          },
+          fill: true, tension: 0.4, pointRadius: 3,
+          pointBackgroundColor: 'rgba(155,107,255,1)',
+          pointBorderColor: '#0A0718', pointBorderWidth: 2, pointHoverRadius: 6
+        },
+        {
+          label: 'Pedidos',
+          data: [18,20,23,25,27,28,27,30,31,33,38,42].map(v=>v*1e3),
+          borderColor: 'rgba(0,229,204,0.8)',
+          borderWidth: 2,
+          backgroundColor: 'transparent',
+          tension: 0.4, pointRadius: 0, pointHoverRadius: 5,
+          yAxisID: 'y2'
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, position:'top', align:'end', labels:{ color:'rgba(240,238,255,0.5)', font:{size:11}, boxWidth:10, boxHeight:10, borderRadius:3, useBorderRadius:true, padding:12 } },
+        tooltip: { ...tip, callbacks:{ label: c => c.datasetIndex===0 ? ` R$ ${(c.parsed.y/1e6).toFixed(1)}M` : ` ${(c.parsed.y/1e3).toFixed(0)}K pedidos` } }
+      },
+      scales: {
+        x: { grid:{color:gridColor}, border:{display:false}, ticks:{font:{size:10}} },
+        y: { grid:{color:gridColor}, border:{display:false}, ticks:{font:{size:10}, callback:v=>`R$${(v/1e6).toFixed(0)}M`}, position:'left' },
+        y2: { grid:{display:false}, border:{display:false}, ticks:{font:{size:10}, callback:v=>`${(v/1e3).toFixed(0)}K`}, position:'right' }
+      }
+    }
+  });
+
+  // Orders chart
+  new Chart('ordersChart', {
+    type: 'bar',
+    data: {
+      labels: ['Q1','Q2','Q3','Q4'],
+      datasets: [
+        { label:'Pedidos (K)', data:[61,80,88,83], backgroundColor:'rgba(155,107,255,0.65)', borderRadius:6, barThickness:28 },
+        { label:'CAC (R$)', data:[48,42,35,28], type:'line', borderColor:'var(--amber)', borderWidth:2, pointRadius:4, pointBackgroundColor:'var(--amber)', pointBorderColor:'#0A0718', pointBorderWidth:2, backgroundColor:'transparent', yAxisID:'y2', tension:0.3 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend:{ display:true, position:'top', align:'end', labels:{color:'rgba(240,238,255,0.5)',font:{size:10},boxWidth:10,boxHeight:10,borderRadius:3,useBorderRadius:true,padding:10} },
+        tooltip:{ ...tip }
+      },
+      scales: {
+        x:{ grid:{display:false}, border:{display:false}, ticks:{font:{size:11}} },
+        y:{ grid:{color:gridColor}, border:{display:false}, ticks:{font:{size:10},callback:v=>v+'K'} },
+        y2:{ grid:{display:false}, border:{display:false}, ticks:{font:{size:10},callback:v=>'R$'+v}, position:'right' }
+      }
+    }
+  });
+
+  // Device donut
+  new Chart('deviceChart', {
+    type: 'doughnut',
+    data: {
+      labels: ['Mobile App','Desktop Web','Mobile Web'],
+      datasets:[{
+        data:[58,28,14],
+        backgroundColor:['rgba(155,107,255,0.85)','rgba(0,229,204,0.75)','rgba(255,107,157,0.8)'],
+        borderWidth: 3,
+        borderColor: 'rgba(10,7,24,0.8)',
+        hoverOffset: 6
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'66%',
+      plugins:{ legend:{display:false}, tooltip:{...tip, callbacks:{label:c=>` ${c.parsed}%`}} }
+    }
+  });
+</script>
 </body>
 </html>

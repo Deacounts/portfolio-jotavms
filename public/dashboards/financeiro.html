@@ -1,23 +1,254 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard — Análise Financeira</title>
-  <style>
-    body { margin: 0; background: #0a0e14; color: #e6e9ef; font-family: monospace;
-           display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-    .msg { text-align: center; border: 1px solid #00b4a6; padding: 2rem 3rem; border-radius: 4px; }
-    .label { color: #00b4a6; font-size: 0.75rem; letter-spacing: 0.1em; margin-bottom: 1rem; }
-    h1 { font-size: 1.25rem; margin: 0 0 0.5rem; }
-    p { color: #8b95a7; font-size: 0.875rem; margin: 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaTech · Performance Financeira FY2024</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #C9A84C; --gold-light: #E8CC80; --gold-muted: #7a6230;
+    --bg: #0D0F14; --surface: #13161E; --surface2: #1A1E2A;
+    --border: #252A38; --text: #E8EAF0; --muted: #6B7280;
+    --green: #4AAF64; --red: #DC5050; --blue: #4A7FBF;
+  }
+  body {
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    padding: 40px 48px 48px;
+    width: 1280px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; animation: fadeDown 0.6s ease both; }
+  .badge { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .badge-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--gold-muted), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .badge-text { color: var(--gold); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; }
+  h1 { font-family: 'DM Serif Display', serif; font-size: 38px; font-weight: 400; line-height: 1.15; }
+  .subtitle { color: var(--muted); font-size: 14px; margin-top: 6px; }
+  .tabs { display: flex; gap: 8px; }
+  .tab { border: 1px solid var(--border); color: var(--muted); padding: 8px 20px; border-radius: 8px; font-size: 13px; font-family: 'DM Sans', sans-serif; font-weight: 500; background: transparent; cursor: pointer; }
+  .tab.active { background: linear-gradient(135deg,rgba(122,98,48,.25),rgba(201,168,76,.12)); border-color: var(--gold-muted); color: var(--gold-light); }
+
+  /* KPI Grid */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; position: relative; overflow: hidden; opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .5s ease; }
+  .kpi-card.accent { background: linear-gradient(135deg,#1A1608,#1F1C0A); border-color: var(--gold-muted); }
+  .kpi-card.accent::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background: linear-gradient(90deg,transparent,var(--gold),transparent); }
+  .kpi-card.show { opacity:1; transform:translateY(0); }
+  .kpi-label { color: var(--muted); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+  .kpi-value { font-family: 'DM Serif Display', serif; font-size: 28px; font-weight: 400; margin: 8px 0 6px; }
+  .kpi-card.accent .kpi-value { color: var(--gold); }
+  .kpi-footer { display: flex; align-items: center; gap: 8px; }
+  .delta { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+  .delta.up { background: rgba(74,175,100,.15); color: var(--green); }
+  .delta.dn { background: rgba(220,80,80,.15); color: var(--red); }
+  .kpi-sub { color: var(--muted); font-size: 11px; }
+
+  /* Chart layout */
+  .row1 { display: grid; grid-template-columns: 1fr 360px; gap: 20px; margin-bottom: 20px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px 28px 24px; opacity:0; transform:translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+  .card.show { opacity:1; transform:translateY(0); }
+  .eyebrow { color: var(--muted); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 4px; }
+  .card-title { font-family: 'DM Serif Display', serif; font-size: 21px; font-weight: 400; }
+  .card-sub { color: var(--muted); font-size: 12px; margin-top: 4px; margin-bottom: 20px; }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .legend { display: flex; gap: 18px; }
+  .leg { display: flex; align-items: center; gap: 6px; }
+  .leg-line { width: 22px; height: 2px; border-radius: 2px; }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink:0; }
+  .leg-lbl { color: var(--muted); font-size: 11px; }
+
+  /* CRITICAL FIX: wrapper with explicit pixel height */
+  .chart-wrap { position: relative; width: 100%; }
+  .h220 { height: 220px; }
+  .h170 { height: 170px; }
+  .h190 { height: 190px; }
+
+  /* Donut legend */
+  .seg-list { display: flex; flex-direction: column; gap: 9px; margin-top: 14px; }
+  .seg-row { display: flex; justify-content: space-between; align-items: center; }
+  .seg-left { display: flex; align-items: center; gap: 8px; }
+  .seg-name { color: var(--muted); font-size: 12px; }
+  .seg-pct { color: var(--text); font-size: 13px; font-weight: 500; }
+
+  /* Footer */
+  .footer { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; }
+  .foot-l { color: #3A4055; font-size: 11px; letter-spacing: .06em; }
+  .foot-r { color: var(--gold-muted); font-size: 11px; letter-spacing: .06em; }
+
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:none} }
+  ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-track{background:var(--bg)} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+</style>
 </head>
 <body>
-  <div class="msg">
-    <div class="label">// PLACEHOLDER</div>
-    <h1>Dashboard · Análise Financeira</h1>
-    <p>Cole seu arquivo <code>financeiro.html</code> aqui.<br>Veja SETUP.md para instruções.</p>
+
+<!-- HEADER -->
+<header class="header">
+  <div>
+    <div class="badge">
+      <div class="badge-icon">◈</div>
+      <span class="badge-text">NovaTech Soluções · FY 2024</span>
+    </div>
+    <h1>Performance Financeira</h1>
+    <p class="subtitle">Consolidado Anual · Última atualização: Dez 2024</p>
   </div>
+  <div class="tabs">
+    <button class="tab active">Overview</button>
+    <button class="tab">Detalhes</button>
+  </div>
+</header>
+
+<!-- KPIs -->
+<div class="kpi-grid">
+  <div class="kpi-card accent" data-i="0"><p class="kpi-label">Receita Anual</p><p class="kpi-value">R$ 32.2M</p><div class="kpi-footer"><span class="delta up">+38%</span><span class="kpi-sub">vs. ano anterior</span></div></div>
+  <div class="kpi-card" data-i="1"><p class="kpi-label">EBITDA</p><p class="kpi-value">R$ 11.9M</p><div class="kpi-footer"><span class="delta up">+52%</span><span class="kpi-sub">margem 37%</span></div></div>
+  <div class="kpi-card" data-i="2"><p class="kpi-label">Lucro Líquido</p><p class="kpi-value">R$ 8.4M</p><div class="kpi-footer"><span class="delta up">+44%</span><span class="kpi-sub">margem 26%</span></div></div>
+  <div class="kpi-card" data-i="3"><p class="kpi-label">Churn Rate</p><p class="kpi-value">2.1%</p><div class="kpi-footer"><span class="delta dn">-18%</span><span class="kpi-sub">melhor que meta</span></div></div>
+  <div class="kpi-card" data-i="4"><p class="kpi-label">LTV Médio</p><p class="kpi-value">R$ 17.6K</p><div class="kpi-footer"><span class="delta up">+42%</span><span class="kpi-sub">vs. Q4 anterior</span></div></div>
+  <div class="kpi-card" data-i="5"><p class="kpi-label">CAC</p><p class="kpi-value">R$ 1.2K</p><div class="kpi-footer"><span class="delta dn">-34%</span><span class="kpi-sub">eficiência +52%</span></div></div>
+  <div class="kpi-card" data-i="6"><p class="kpi-label">MRR</p><p class="kpi-value">R$ 2.68M</p><div class="kpi-footer"><span class="delta up">+8%</span><span class="kpi-sub">vs. mês anterior</span></div></div>
+  <div class="kpi-card" data-i="7"><p class="kpi-label">NPS Score</p><p class="kpi-value">72</p><div class="kpi-footer"><span class="delta up">+14%</span><span class="kpi-sub">benchmark setor: 51</span></div></div>
+</div>
+
+<!-- ROW 1 -->
+<div class="row1">
+  <div class="card" data-i="8">
+    <div class="card-header">
+      <div><p class="eyebrow">Evolução Mensal</p><h2 class="card-title">Receita · Despesa · Lucro</h2></div>
+      <div class="legend">
+        <div class="leg"><div class="leg-line" style="background:#C9A84C"></div><span class="leg-lbl">Receita</span></div>
+        <div class="leg"><div class="leg-line" style="background:#4A7FBF"></div><span class="leg-lbl">Despesa</span></div>
+        <div class="leg"><div class="leg-line" style="background:#4AAF64"></div><span class="leg-lbl">Lucro</span></div>
+      </div>
+    </div>
+    <div class="chart-wrap h220"><canvas id="areaChart"></canvas></div>
+  </div>
+
+  <div class="card" data-i="9">
+    <p class="eyebrow">Composição</p>
+    <h2 class="card-title" style="margin-bottom:16px">Receita por Segmento</h2>
+    <div class="chart-wrap h170"><canvas id="donutChart"></canvas></div>
+    <div class="seg-list">
+      <div class="seg-row"><div class="seg-left"><div class="leg-dot" style="background:#C9A84C"></div><span class="seg-name">SaaS B2B</span></div><span class="seg-pct">44%</span></div>
+      <div class="seg-row"><div class="seg-left"><div class="leg-dot" style="background:#4A7FBF"></div><span class="seg-name">Marketplace</span></div><span class="seg-pct">28%</span></div>
+      <div class="seg-row"><div class="seg-left"><div class="leg-dot" style="background:#5B8F6A"></div><span class="seg-name">Serviços</span></div><span class="seg-pct">18%</span></div>
+      <div class="seg-row"><div class="seg-left"><div class="leg-dot" style="background:#9B6B9B"></div><span class="seg-name">Licenças</span></div><span class="seg-pct">10%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ROW 2 -->
+<div class="row2">
+  <div class="card" data-i="10">
+    <p class="eyebrow">Estrutura de Custos</p>
+    <h2 class="card-title" style="margin-bottom:22px">Despesas por Categoria (Dez)</h2>
+    <div class="chart-wrap h190"><canvas id="barHChart"></canvas></div>
+  </div>
+  <div class="card" data-i="11">
+    <p class="eyebrow">Unit Economics</p>
+    <h2 class="card-title">CAC vs LTV por Trimestre</h2>
+    <p class="card-sub">Razão LTV/CAC atual: <span style="color:#4AAF64;font-weight:600">14.5x</span> — excelente eficiência</p>
+    <div class="chart-wrap h190"><canvas id="barGroupChart"></canvas></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span class="foot-l">Dados fictícios criados para fins demonstrativos · NovaTech Soluções FY2024</span>
+  <span class="foot-r">◈ Financial Intelligence Dashboard</span>
+</div>
+
+<script>
+  // Animate cards
+  document.querySelectorAll('[data-i]').forEach(el => {
+    setTimeout(() => el.classList.add('show'), 80 + parseInt(el.dataset.i) * 80);
+  });
+
+  Chart.defaults.font.family = "'DM Sans', sans-serif";
+  Chart.defaults.color = '#6B7280';
+  const grid = '#252A38';
+  const fmt = v => v >= 1e6 ? (v/1e6).toFixed(1)+'M' : (v/1e3).toFixed(0)+'K';
+  const tip = { backgroundColor:'#1A1E2A', borderColor:'#252A38', borderWidth:1, titleColor:'#6B7280', bodyColor:'#E8EAF0', padding:12 };
+
+  // Area Chart
+  new Chart('areaChart', {
+    type: 'line',
+    data: {
+      labels: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+      datasets: [
+        { label:'Receita', data:[1820,2050,1930,2310,2580,2740,2620,2890,3120,3350,3680,4120].map(v=>v*1e3), borderColor:'#C9A84C', borderWidth:2, backgroundColor:'rgba(201,168,76,0.12)', fill:true, tension:0.4, pointRadius:0, pointHoverRadius:5 },
+        { label:'Despesa', data:[1340,1420,1380,1510,1620,1700,1680,1750,1820,1900,2010,2200].map(v=>v*1e3), borderColor:'#4A7FBF', borderWidth:2, backgroundColor:'rgba(74,127,191,0.12)', fill:true, tension:0.4, pointRadius:0, pointHoverRadius:5 },
+        { label:'Lucro',   data:[480,630,550,800,960,1040,940,1140,1300,1450,1670,1920].map(v=>v*1e3), borderColor:'#4AAF64', borderWidth:2, backgroundColor:'rgba(74,175,100,0.12)', fill:true, tension:0.4, pointRadius:0, pointHoverRadius:5 },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ ...tip, callbacks:{label:c=>` R$ ${fmt(c.parsed.y)}`} } },
+      scales:{
+        x:{ grid:{display:false}, border:{display:false}, ticks:{font:{size:11}} },
+        y:{ grid:{color:grid}, border:{display:false}, ticks:{font:{size:11}, callback:fmt} }
+      }
+    }
+  });
+
+  // Donut Chart
+  new Chart('donutChart', {
+    type: 'doughnut',
+    data: {
+      labels: ['SaaS B2B','Marketplace','Serviços','Licenças'],
+      datasets:[{ data:[44,28,18,10], backgroundColor:['#C9A84C','#4A7FBF','#5B8F6A','#9B6B9B'], borderWidth:0, hoverOffset:6 }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'62%',
+      plugins:{ legend:{display:false}, tooltip:{ ...tip, callbacks:{label:c=>` ${c.parsed}%`} } }
+    }
+  });
+
+  // Horizontal Bar
+  new Chart('barHChart', {
+    type:'bar',
+    data:{
+      labels:['Pessoal','Marketing','Infra','Jurídico','Outros'],
+      datasets:[{ data:[980000,440000,320000,180000,280000], backgroundColor:'rgba(201,168,76,0.8)', borderRadius:{topRight:6,bottomRight:6}, borderSkipped:'left', barThickness:20 }]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ ...tip, callbacks:{label:c=>` R$ ${fmt(c.parsed.x)}`} } },
+      scales:{
+        x:{ grid:{color:grid}, border:{display:false}, ticks:{font:{size:11}, callback:fmt} },
+        y:{ grid:{display:false}, border:{display:false}, ticks:{font:{size:12}} }
+      }
+    }
+  });
+
+  // Grouped Bar
+  new Chart('barGroupChart', {
+    type:'bar',
+    data:{
+      labels:['Q1','Q2','Q3','Q4'],
+      datasets:[
+        { label:'LTV', data:[12400,13800,15200,17600], backgroundColor:'rgba(74,127,191,0.8)', borderRadius:4, barThickness:26 },
+        { label:'CAC', data:[1840,1620,1390,1210], backgroundColor:'rgba(201,168,76,0.85)', borderRadius:4, barThickness:26 },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{ display:true, position:'top', align:'end', labels:{color:'#6B7280',font:{size:11},boxWidth:12,boxHeight:12,borderRadius:3,useBorderRadius:true,padding:14} },
+        tooltip:{ ...tip, callbacks:{label:c=>` R$ ${c.parsed.y.toLocaleString('pt-BR')}`} }
+      },
+      scales:{
+        x:{ grid:{display:false}, border:{display:false}, ticks:{font:{size:12}} },
+        y:{ grid:{color:grid}, border:{display:false}, ticks:{font:{size:11}, callback:v=>`${(v/1e3).toFixed(0)}K`} }
+      }
+    }
+  });
+</script>
 </body>
 </html>

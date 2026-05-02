@@ -1,23 +1,395 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard — people-analytics</title>
-  <style>
-    body { margin: 0; background: #0a0e14; color: #e6e9ef; font-family: monospace;
-           display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-    .msg { text-align: center; border: 1px solid #00b4a6; padding: 2rem 3rem; border-radius: 4px; }
-    .label { color: #00b4a6; font-size: 0.75rem; letter-spacing: 0.1em; margin-bottom: 1rem; }
-    h1 { font-size: 1.25rem; margin: 0 0 0.5rem; }
-    p { color: #8b95a7; font-size: 0.875rem; margin: 0; }
-  </style>
+<meta charset="UTF-8">
+<title>People Pulse · HR Analytics 2024</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Karla:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --moss: #2D5016;
+  --moss-mid: #4A7A28;
+  --moss-light: #A8C97F;
+  --moss-pale: #EEF5E6;
+  --orange: #E85D1A;
+  --orange-pale: #FDF0EA;
+  --cream: #FAF8F4;
+  --ink: #1C1B18;
+  --ink2: #3D3B35;
+  --muted: #918E84;
+  --border: #E4E1D8;
+  --white: #FFFFFF;
+  --yellow: #F5C842;
+  --blue: #1E5FAD;
+}
+body {
+  background: var(--cream);
+  font-family: 'Karla', sans-serif;
+  color: var(--ink);
+  padding: 36px 44px 52px;
+  width: 1300px;
+  margin: 0 auto;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--ink);
+  animation: fadeIn .5s ease both;
+}
+.logo { display: flex; align-items: baseline; gap: 10px; }
+.logo-mark {
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px;
+  background: var(--moss); color: white;
+  padding: 4px 10px; border-radius: 6px; letter-spacing: -.5px;
+}
+.logo-sub { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); letter-spacing: .06em; }
+.topbar-center { text-align: center; }
+.topbar-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+.topbar-right { display: flex; align-items: center; gap: 24px; }
+.stat-pill { text-align: right; }
+.stat-pill-val { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; line-height: 1; }
+.stat-pill-lbl { font-size: 10px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-top: 2px; }
+.divider-v { width: 1px; height: 36px; background: var(--border); }
+
+/* ── BENTO GRID ── */
+.bento {
+  display: grid;
+  grid-template-columns: 260px 1fr 1fr 220px;
+  grid-template-rows: auto auto auto;
+  gap: 14px;
+}
+
+/* ── BASE CARD ── */
+.tile {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  opacity: 0; transform: scale(.97);
+  transition: opacity .5s ease, transform .5s ease;
+  overflow: hidden;
+  position: relative;
+}
+.tile.show { opacity: 1; transform: scale(1); }
+.tile-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.tile-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; line-height: 1.25; }
+.tile-big-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; line-height: 1;
+}
+.tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; margin-top: 8px; }
+.tag-green { background: #DCFCE7; color: #16A34A; }
+.tag-red { background: #FEE2E2; color: #DC2626; }
+.tag-orange { background: var(--orange-pale); color: var(--orange); }
+.tag-blue { background: #DBEAFE; color: var(--blue); }
+
+/* colored tiles */
+.tile-moss { background: var(--moss); border-color: var(--moss); color: white; }
+.tile-moss .tile-eyebrow { color: var(--moss-light); }
+.tile-moss .tile-title { color: white; }
+.tile-orange { background: var(--orange); border-color: var(--orange); color: white; }
+.tile-orange .tile-eyebrow { color: rgba(255,255,255,.65); }
+.tile-yellow { background: var(--yellow); border-color: var(--yellow); color: var(--ink); }
+.tile-yellow .tile-eyebrow { color: var(--ink2); }
+.tile-ink { background: var(--ink); border-color: var(--ink); color: white; }
+.tile-ink .tile-eyebrow { color: var(--muted); }
+
+/* grid placement */
+.t-headcount   { grid-column: 1; grid-row: 1; }
+.t-turnover    { grid-column: 2; grid-row: 1; }
+.t-enps        { grid-column: 3; grid-row: 1; }
+.t-hire        { grid-column: 4; grid-row: 1; }
+.t-trend       { grid-column: 1 / 3; grid-row: 2; }
+.t-funnel      { grid-column: 3; grid-row: 2; }
+.t-seniority   { grid-column: 4; grid-row: 2; }
+.t-satisfaction{ grid-column: 1; grid-row: 3; }
+.t-dept        { grid-column: 2 / 4; grid-row: 3; }
+.t-kpis        { grid-column: 4; grid-row: 3; }
+
+/* chart wrappers */
+.cw { position: relative; width: 100%; }
+.h180 { height: 180px; }
+.h220 { height: 220px; }
+.h155 { height: 155px; }
+
+/* funnel */
+.funnel { display: flex; flex-direction: column; gap: 9px; margin-top: 14px; }
+.f-row { display: flex; flex-direction: column; gap: 3px; }
+.f-meta { display: flex; justify-content: space-between; font-size: 11px; }
+.f-name { color: rgba(255,255,255,.7); }
+.f-num  { color: white; font-weight: 600; }
+.f-track { background: rgba(255,255,255,.15); border-radius: 4px; height: 7px; overflow: hidden; }
+.f-fill { height: 100%; border-radius: 4px; background: white; }
+
+/* satisfaction */
+.sat-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+.s-row {}
+.s-top { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 12px; }
+.s-label { color: rgba(255,255,255,.75); }
+.s-score { font-weight: 700; color: white; }
+.s-track { background: rgba(255,255,255,.15); border-radius: 5px; height: 7px; overflow: hidden; }
+.s-fill { height: 100%; border-radius: 5px; background: var(--moss-light); }
+
+/* dept bars */
+.dept-bars { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.d-row { display: flex; align-items: center; gap: 12px; }
+.d-name { width: 90px; font-size: 12px; font-weight: 500; color: var(--ink2); white-space: nowrap; }
+.d-track { flex: 1; background: var(--cream); border-radius: 5px; height: 10px; overflow: hidden; }
+.d-fill { height: 100%; border-radius: 5px; }
+.d-count { width: 30px; text-align: right; font-size: 12px; font-weight: 700; }
+
+/* mini kpis */
+.mini-kpis { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+.mk { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(255,255,255,.07); border-radius: 10px; border: 1px solid rgba(255,255,255,.1); }
+.mk-label { font-size: 11px; color: rgba(255,255,255,.6); }
+.mk-val { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; }
+
+/* decorative corner shape */
+.corner-deco {
+  position: absolute; bottom: -30px; right: -30px;
+  width: 100px; height: 100px; border-radius: 50%;
+  opacity: .08;
+}
+
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+</style>
 </head>
 <body>
-  <div class="msg">
-    <div class="label">// PLACEHOLDER</div>
-    <h1>Dashboard · people-analytics</h1>
-    <p>Cole seu arquivo <code>people-analytics.html</code> aqui.<br>Veja SETUP.md para instruções.</p>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo">
+    <span class="logo-mark">PP</span>
+    <span class="logo-sub">People Pulse · TechCorp Brasil</span>
   </div>
+  <div class="topbar-center">
+    <p class="topbar-title">People Analytics Dashboard · FY 2024</p>
+  </div>
+  <div class="topbar-right">
+    <div class="stat-pill">
+      <div class="stat-pill-val" style="color:var(--moss)">842</div>
+      <div class="stat-pill-lbl">colaboradores</div>
+    </div>
+    <div class="divider-v"></div>
+    <div class="stat-pill">
+      <div class="stat-pill-val" style="color:var(--orange)">9.4%</div>
+      <div class="stat-pill-lbl">turnover</div>
+    </div>
+    <div class="divider-v"></div>
+    <div class="stat-pill">
+      <div class="stat-pill-val" style="color:var(--blue)">eNPS 58</div>
+      <div class="stat-pill-lbl">satisfação</div>
+    </div>
+  </div>
+</div>
+
+<!-- BENTO GRID -->
+<div class="bento">
+
+  <!-- Headcount -->
+  <div class="tile tile-moss t-headcount" data-i="0">
+    <div class="corner-deco" style="background:white"></div>
+    <p class="tile-eyebrow">Headcount</p>
+    <p class="tile-big-num" style="font-size:56px;color:white;margin:8px 0 4px">842</p>
+    <p style="color:var(--moss-light);font-size:12px">colaboradores ativos</p>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <span class="tag tag-green">+90 vs 2023</span>
+      <span style="font-size:11px;color:rgba(255,255,255,.5);align-self:center">▲ 12%</span>
+    </div>
+  </div>
+
+  <!-- Turnover bar chart -->
+  <div class="tile t-turnover" data-i="1">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+      <div>
+        <p class="tile-eyebrow">Retenção</p>
+        <p class="tile-title">Turnover Mensal vs Meta</p>
+      </div>
+      <span class="tag tag-green">↓ 3.1pp no ano</span>
+    </div>
+    <div class="cw h180"><canvas id="turnoverChart"></canvas></div>
+  </div>
+
+  <!-- eNPS big -->
+  <div class="tile tile-yellow t-enps" data-i="2">
+    <div class="corner-deco" style="background:var(--ink)"></div>
+    <p class="tile-eyebrow" style="color:var(--ink2)">Employee NPS</p>
+    <p class="tile-big-num" style="font-size:64px;color:var(--ink);margin:6px 0 0">58</p>
+    <p style="font-size:12px;color:var(--ink2);margin-top:4px">benchmark do setor: 42</p>
+    <div style="margin-top:14px;display:flex;gap:8px">
+      <span class="tag" style="background:rgba(0,0,0,.1);color:var(--ink)">+11 pts vs 2023</span>
+    </div>
+    <div style="margin-top:18px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink2);margin-bottom:5px"><span>Score</span><span>100</span></div>
+      <div style="background:rgba(0,0,0,.12);border-radius:6px;height:8px;overflow:hidden"><div style="width:58%;height:100%;background:var(--ink);border-radius:6px"></div></div>
+    </div>
+  </div>
+
+  <!-- Time to hire -->
+  <div class="tile tile-orange t-hire" data-i="3">
+    <div class="corner-deco" style="background:white"></div>
+    <p class="tile-eyebrow">Recrutamento</p>
+    <p class="tile-big-num" style="font-size:48px;color:white;margin:8px 0 0">23d</p>
+    <p style="color:rgba(255,255,255,.65);font-size:12px;margin-top:4px">time to hire médio</p>
+    <span class="tag" style="background:rgba(255,255,255,.2);color:white;margin-top:12px">-6d vs 2023</span>
+    <div style="margin-top:16px;font-size:11px;color:rgba(255,255,255,.5)">Custo por hire</div>
+    <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:white;margin-top:2px">R$ 4.2K</div>
+  </div>
+
+  <!-- Headcount trend -->
+  <div class="tile t-trend" data-i="4">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+      <div>
+        <p class="tile-eyebrow">Evolução</p>
+        <p class="tile-title">Crescimento de Headcount 2024</p>
+      </div>
+      <div style="display:flex;gap:16px">
+        <div style="text-align:right"><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--moss)">+90</div><div style="font-size:10px;color:var(--muted)">novas contratações</div></div>
+        <div style="text-align:right"><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--orange)">87%</div><div style="font-size:10px;color:var(--muted)">retenção 1 ano</div></div>
+      </div>
+    </div>
+    <div class="cw h220"><canvas id="headcountChart"></canvas></div>
+  </div>
+
+  <!-- Funnel -->
+  <div class="tile tile-moss t-funnel" data-i="5">
+    <p class="tile-eyebrow">Pipeline</p>
+    <p class="tile-title" style="color:white">Funil de Seleção</p>
+    <div class="funnel">
+      <div class="f-row"><div class="f-meta"><span class="f-name">Candidaturas</span><span class="f-num">1.840</span></div><div class="f-track"><div class="f-fill" style="width:100%"></div></div></div>
+      <div class="f-row"><div class="f-meta"><span class="f-name">Triagem</span><span class="f-num">612 · 33%</span></div><div class="f-track"><div class="f-fill" style="width:33%"></div></div></div>
+      <div class="f-row"><div class="f-meta"><span class="f-name">Entrevista RH</span><span class="f-num">298 · 16%</span></div><div class="f-track"><div class="f-fill" style="width:16%"></div></div></div>
+      <div class="f-row"><div class="f-meta"><span class="f-name">Técnica</span><span class="f-num">142 · 8%</span></div><div class="f-track"><div class="f-fill" style="width:8%"></div></div></div>
+      <div class="f-row"><div class="f-meta"><span class="f-name">Oferta</span><span class="f-num">68 · 4%</span></div><div class="f-track"><div class="f-fill" style="width:4%;background:var(--yellow)"></div></div></div>
+      <div class="f-row"><div class="f-meta"><span class="f-name">Contratados</span><span class="f-num">54 · 3%</span></div><div class="f-track"><div class="f-fill" style="width:3%;background:var(--moss-light)"></div></div></div>
+    </div>
+  </div>
+
+  <!-- Seniority donut -->
+  <div class="tile t-seniority" data-i="6">
+    <p class="tile-eyebrow">Composição</p>
+    <p class="tile-title">Senioridade</p>
+    <div class="cw h155" style="margin-top:10px"><canvas id="seniorityChart"></canvas></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
+      <div style="display:flex;align-items:center;gap:5px"><div style="width:7px;height:7px;border-radius:50%;background:var(--moss)"></div><span style="font-size:10px;color:var(--muted)">Júnior 28%</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><div style="width:7px;height:7px;border-radius:50%;background:var(--blue)"></div><span style="font-size:10px;color:var(--muted)">Pleno 35%</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><div style="width:7px;height:7px;border-radius:50%;background:var(--orange)"></div><span style="font-size:10px;color:var(--muted)">Sênior 24%</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><div style="width:7px;height:7px;border-radius:50%;background:var(--yellow)"></div><span style="font-size:10px;color:var(--muted)">Liderança 13%</span></div>
+    </div>
+  </div>
+
+  <!-- Satisfaction -->
+  <div class="tile tile-ink t-satisfaction" data-i="7">
+    <p class="tile-eyebrow">Clima</p>
+    <p class="tile-title" style="color:white">Satisfação por Tema</p>
+    <div class="sat-grid">
+      <div class="s-row"><div class="s-top"><span class="s-label">Cultura</span><span class="s-score">8.7</span></div><div class="s-track"><div class="s-fill" style="width:87%"></div></div></div>
+      <div class="s-row"><div class="s-top"><span class="s-label">Liderança</span><span class="s-score">8.1</span></div><div class="s-track"><div class="s-fill" style="width:81%"></div></div></div>
+      <div class="s-row"><div class="s-top"><span class="s-label">Remuneração</span><span class="s-score">7.3</span></div><div class="s-track"><div class="s-fill" style="width:73%;background:var(--yellow)"></div></div></div>
+      <div class="s-row"><div class="s-top"><span class="s-label">Crescimento</span><span class="s-score">7.8</span></div><div class="s-track"><div class="s-fill" style="width:78%;background:var(--orange)"></div></div></div>
+      <div class="s-row"><div class="s-top"><span class="s-label">Work-life balance</span><span class="s-score">8.4</span></div><div class="s-track"><div class="s-fill" style="width:84%"></div></div></div>
+    </div>
+  </div>
+
+  <!-- Dept -->
+  <div class="tile t-dept" data-i="8">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+      <div>
+        <p class="tile-eyebrow">Estrutura organizacional</p>
+        <p class="tile-title">Headcount por Área</p>
+      </div>
+      <span class="tag tag-blue">7 departamentos</span>
+    </div>
+    <div class="dept-bars">
+      <div class="d-row"><span class="d-name">Tecnologia</span><div class="d-track"><div class="d-fill" style="width:100%;background:var(--moss)"></div></div><span class="d-count" style="color:var(--moss)">218</span></div>
+      <div class="d-row"><span class="d-name">Comercial</span><div class="d-track"><div class="d-fill" style="width:81%;background:var(--blue)"></div></div><span class="d-count" style="color:var(--blue)">176</span></div>
+      <div class="d-row"><span class="d-name">Operações</span><div class="d-track"><div class="d-fill" style="width:66%;background:var(--orange)"></div></div><span class="d-count" style="color:var(--orange)">144</span></div>
+      <div class="d-row"><span class="d-name">Marketing</span><div class="d-track"><div class="d-fill" style="width:45%;background:var(--yellow)"></div></div><span class="d-count">98</span></div>
+      <div class="d-row"><span class="d-name">Financeiro</span><div class="d-track"><div class="d-fill" style="width:38%;background:#9B72CF"></div></div><span class="d-count">82</span></div>
+      <div class="d-row"><span class="d-name">RH & Jurídico</span><div class="d-track"><div class="d-fill" style="width:28%;background:var(--muted)"></div></div><span class="d-count">62</span></div>
+    </div>
+  </div>
+
+  <!-- Mini KPIs -->
+  <div class="tile tile-ink t-kpis" data-i="9">
+    <p class="tile-eyebrow" style="color:var(--muted)">Destaques</p>
+    <p class="tile-title" style="color:white;margin-bottom:0">Métricas Chave</p>
+    <div class="mini-kpis">
+      <div class="mk"><span class="mk-label">Vagas abertas</span><span class="mk-val" style="color:var(--yellow)">37</span></div>
+      <div class="mk"><span class="mk-label">T&D por colab.</span><span class="mk-val" style="color:var(--moss-light)">48h</span></div>
+      <div class="mk"><span class="mk-label">Retenção 1 ano</span><span class="mk-val" style="color:var(--moss-light)">87%</span></div>
+      <div class="mk"><span class="mk-label">Absenteísmo</span><span class="mk-val" style="color:var(--orange)">2.1%</span></div>
+      <div class="mk"><span class="mk-label">Promoções</span><span class="mk-val" style="color:var(--yellow)">94</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div style="margin-top:20px;padding-top:16px;border-top:1.5px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+  <span style="color:var(--muted);font-size:11px">Dados fictícios criados para fins demonstrativos · TechCorp Brasil FY2024</span>
+  <span style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--moss);letter-spacing:.08em">PP · PEOPLE PULSE</span>
+</div>
+
+<script>
+  document.querySelectorAll('[data-i]').forEach(el => {
+    setTimeout(() => el.classList.add('show'), 60 + parseInt(el.dataset.i) * 80);
+  });
+
+  Chart.defaults.font.family = "'Karla', sans-serif";
+  Chart.defaults.color = '#918E84';
+  const g = '#E4E1D8';
+  const tip = { backgroundColor:'#1C1B18', borderColor:'#3D3B35', borderWidth:1, titleColor:'#918E84', bodyColor:'#FAF8F4', padding:10, cornerRadius:8 };
+
+  // Turnover
+  new Chart('turnoverChart', {
+    type:'bar',
+    data:{
+      labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+      datasets:[
+        { label:'Turnover', data:[13.2,12.8,12.1,11.6,11.2,10.8,10.4,10.1,9.8,9.6,9.4,9.4], backgroundColor:'rgba(232,93,26,0.75)', borderRadius:4, barThickness:18 },
+        { label:'Meta 12%', data:Array(12).fill(12), type:'line', borderColor:'#2D5016', borderWidth:2, borderDash:[5,4], pointRadius:0, backgroundColor:'transparent' }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:true,position:'top',align:'end',labels:{font:{size:11},boxWidth:10,boxHeight:10,borderRadius:3,useBorderRadius:true,padding:10}}, tooltip:{...tip,callbacks:{label:c=>` ${c.parsed.y}%`}} },
+      scales:{ x:{grid:{display:false},border:{display:false},ticks:{font:{size:10}}}, y:{grid:{color:g},border:{display:false},ticks:{font:{size:10},callback:v=>v+'%'},min:8,max:15} }
+    }
+  });
+
+  // Headcount
+  new Chart('headcountChart', {
+    type:'line',
+    data:{
+      labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+      datasets:[{
+        label:'Headcount', data:[752,758,771,780,788,797,804,811,820,828,836,842],
+        borderColor:'#2D5016', borderWidth:2.5,
+        backgroundColor:'rgba(45,80,22,0.07)', fill:true, tension:0.4,
+        pointRadius:4, pointBackgroundColor:'#2D5016', pointBorderColor:'#FAF8F4', pointBorderWidth:2, pointHoverRadius:6
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{...tip,callbacks:{label:c=>` ${c.parsed.y} pessoas`}} },
+      scales:{ x:{grid:{display:false},border:{display:false},ticks:{font:{size:11}}}, y:{grid:{color:g},border:{display:false},ticks:{font:{size:11}},min:730} }
+    }
+  });
+
+  // Seniority
+  new Chart('seniorityChart', {
+    type:'doughnut',
+    data:{
+      labels:['Júnior','Pleno','Sênior','Liderança'],
+      datasets:[{ data:[28,35,24,13], backgroundColor:['#2D5016','#1E5FAD','#E85D1A','#F5C842'], borderWidth:3, borderColor:'#FFFFFF', hoverOffset:5 }]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'65%', plugins:{ legend:{display:false}, tooltip:{...tip,callbacks:{label:c=>` ${c.parsed}%`}} } }
+  });
+</script>
 </body>
 </html>
