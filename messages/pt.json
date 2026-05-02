@@ -1,0 +1,221 @@
+{
+  "nav": {
+    "about": "Sobre",
+    "projects": "Projetos",
+    "stack": "Stack",
+    "experience": "Experiência",
+    "contact": "Contato",
+    "blog": "Blog",
+    "open_menu": "Abrir menu",
+    "close_menu": "Fechar menu"
+  },
+  "hero": {
+    "tag": "// PORTFÓLIO · 2026",
+    "headline": "Da curiosidade ao dashboard",
+    "subheadline": "Sou João Vitor — analista de dados em construção, transformando perguntas em visualizações que ajudam a decidir.",
+    "cta_primary": "Ver projetos",
+    "cta_secondary": "Baixar CV",
+    "scroll_hint": "Rolar para baixo",
+    "terminal": {
+      "whoami_label": "whoami",
+      "whoami_value": "João Vitor Matos · Campinas, BR",
+      "stack_label": "stack",
+      "stack_value": "Excel · Power BI · Chart.js · IA",
+      "status_label": "status",
+      "status_value": "aprendendo, construindo, publicando"
+    }
+  },
+  "about": {
+    "title": "Sobre",
+    "label": "// QUEM SOU",
+    "paragraph1": "Comecei minha trajetória profissional na área administrativa, organizando estoques e construindo planilhas. Foi nesse caminho que percebi: o que mais me interessa não é a planilha em si, é a pergunta que vem antes dela.",
+    "paragraph2": "Hoje curso Tecnólogo em Processos Gerenciais e estudo análise de dados na prática — construindo dashboards públicos com dados reais, errando, ajustando, publicando. Cada projeto que aparece aqui começou com uma curiosidade e virou uma visualização.",
+    "paragraph3": "Não me chamo de especialista. Me chamo de alguém que está construindo, em público.",
+    "location_label": "Localização",
+    "location_value": "Campinas, SP",
+    "studying_label": "Estudando",
+    "studying_value": "UNINTER · Tecnólogo em Processos Gerenciais",
+    "learning_label": "Aprendendo",
+    "learning_value": "Power BI Avançado, IA aplicada, SQL",
+    "focus_label": "Foco",
+    "focus_value": "Dashboards, análise exploratória, processos"
+  },
+  "projects": {
+    "title": "Projetos",
+    "label": "// PROVA DE TRABALHO",
+    "subtitle": "Quatro projetos construídos com dados reais. Cada um começou com uma pergunta.",
+    "cta": "Abrir case →",
+    "view_all": "Ver todos os projetos",
+    "next_project": "Próximo projeto",
+    "prev_project": "Projeto anterior",
+    "dashboard_label": "Dashboard interativo",
+    "dashboard_fallback": "Caso o dashboard não carregue,",
+    "dashboard_fallback_link": "abra em nova aba",
+    "read_time": "min de leitura",
+    "published": "Publicado em",
+    "items": {
+      "financeiro": {
+        "title": "Análise Financeira",
+        "subtitle": "DRE Pessoal",
+        "tagline": "Demonstrativo de resultados, mas pessoal",
+        "description": "Dashboard de controle financeiro pessoal com visão temporal de receitas e despesas, categorização e indicadores de equilíbrio.",
+        "stack": ["HTML", "CSS", "Chart.js"],
+        "question": "Como visualizar a saúde financeira pessoal além do saldo bancário?",
+        "approach": "Organizei dados de receitas e despesas em categorias, construí uma linha do tempo mensal e calculei indicadores de equilíbrio. A estrutura segue a lógica de um DRE corporativo, adaptada para o contexto pessoal.",
+        "data_source": "Dados fictícios estruturados com base em padrões reais de gastos domésticos.",
+        "learnings": [
+          "A categorização de despesas revela padrões que o saldo final esconde.",
+          "Visualizar tendências mensais é mais útil do que olhar um snapshot.",
+          "Manter a estrutura simples facilita a atualização contínua."
+        ],
+        "date": "2025",
+        "read_time": "4"
+      },
+      "people_analytics": {
+        "title": "People Analytics",
+        "subtitle": "RH com dados",
+        "tagline": "O que os dados dizem sobre a equipe",
+        "description": "Dashboard de RH com headcount, turnover, distribuição por área e indicadores de engajamento.",
+        "stack": ["HTML", "CSS", "Chart.js"],
+        "question": "Como apresentar dados de RH de forma que gestores entendam rapidamente o estado da equipe?",
+        "approach": "Estruturei as métricas em camadas: visão geral do headcount, depois turnover por período, depois distribuição por departamento. A ordem segue a lógica de quem pergunta primeiro 'quantos somos?' antes de 'quem saiu?'.",
+        "data_source": "Dados sintéticos construídos com base em benchmarks públicos de mercado de RH.",
+        "learnings": [
+          "A ordem dos indicadores importa tanto quanto os indicadores em si.",
+          "Turnover sem contexto de crescimento ou contratação é dado incompleto.",
+          "Gráficos de distribuição revelam desequilíbrios que médias escondem."
+        ],
+        "date": "2025",
+        "read_time": "4"
+      },
+      "ecommerce": {
+        "title": "E-commerce Sales",
+        "subtitle": "Vendas online",
+        "tagline": "Vendas, produtos e padrões de compra",
+        "description": "Análise de performance comercial de uma operação de e-commerce — produtos mais vendidos, comportamento de compra e evolução de receita.",
+        "stack": ["HTML", "CSS", "Chart.js"],
+        "question": "Quais produtos puxam a receita e quais padrões de compra se repetem?",
+        "approach": "Analisei dados de vendas por produto, canal e período. Cruzei ticket médio com volume para identificar os produtos que valem mais do que parecem e os que parecem mais do que valem.",
+        "data_source": "Dataset sintético baseado em padrões de e-commerce de varejo.",
+        "learnings": [
+          "Produto mais vendido não é necessariamente o mais rentável.",
+          "Sazonalidade aparece claramente quando você agrupa por semana, não por mês.",
+          "Ticket médio por categoria diz mais sobre o cliente do que sobre o produto."
+        ],
+        "date": "2025",
+        "read_time": "5"
+      },
+      "ibovespa": {
+        "title": "Mercado Brasileiro",
+        "subtitle": "B3 · Ibovespa 2024",
+        "tagline": "Como o índice se comportou em 2024",
+        "description": "Panorama do mercado financeiro brasileiro em 2024 — desempenho do Ibovespa, contexto macroeconômico e principais eventos do ano.",
+        "stack": ["HTML", "CSS", "Chart.js"],
+        "question": "O que aconteceu com o mercado financeiro brasileiro em 2024 e como os principais indicadores se relacionam?",
+        "approach": "Coletei dados verificados de fontes primárias (Banco Central, Agência Brasil, InfoMoney), organizei por eixo temporal e contextualizei os movimentos do índice com os eventos macroeconômicos correspondentes.",
+        "data_source": "Banco Central do Brasil, Agência Brasil, InfoMoney. Dados verificados e referenciados.",
+        "learnings": [
+          "Dados financeiros públicos exigem validação cruzada entre fontes.",
+          "Contextualizar números com eventos torna o dashboard analítico, não apenas descritivo.",
+          "O Ibovespa em 2024 refletiu mais o cenário fiscal doméstico do que o externo."
+        ],
+        "date": "2025",
+        "read_time": "6"
+      }
+    }
+  },
+  "stack": {
+    "title": "Stack",
+    "label": "// FERRAMENTAS",
+    "subtitle": "O que uso e aprendo na prática.",
+    "categories": {
+      "data": {
+        "label": "Dados & BI",
+        "items": ["Excel Avançado", "Power BI", "Dashboards", "Chart.js", "KPIs & Indicadores", "Análise de Dados"]
+      },
+      "process": {
+        "label": "Processos",
+        "items": ["Kaizen", "Gestão de Projetos", "Controle de Estoque", "Logística", "Eficiência Operacional"]
+      },
+      "ai": {
+        "label": "IA & Automação",
+        "items": ["Engenharia de Prompts", "IA Generativa", "Azure AI Fundamentals", "Automação de Controles"]
+      },
+      "frontend": {
+        "label": "Front-end",
+        "items": ["HTML", "CSS", "Git/GitHub"]
+      },
+      "soft": {
+        "label": "Soft Skills",
+        "items": ["Aprendizado contínuo", "Pensamento analítico", "Atenção a detalhes", "Comunicação"]
+      }
+    }
+  },
+  "experience": {
+    "title": "Experiência",
+    "label": "// TRAJETÓRIA",
+    "cta": "Ver currículo completo",
+    "present": "atual",
+    "items": [
+      {
+        "company": "Romane Marmoraria",
+        "role": "Estágio — Gerente de Projetos",
+        "period": "Out – Nov 2025",
+        "location": "Campinas, SP",
+        "bullets": [
+          "Gestão de projetos de acabamento e reforma com controle de prazo e fornecedores.",
+          "Organização de demandas e acompanhamento de execução junto à equipe operacional."
+        ]
+      },
+      {
+        "company": "Timax",
+        "role": "Estoquista",
+        "period": "Nov 2023 – Nov 2024",
+        "location": "Campinas, SP",
+        "bullets": [
+          "Controle de entrada e saída de materiais com planilhas de rastreamento.",
+          "Identificação de padrões de giro de estoque que reduziram rupturas internas."
+        ]
+      },
+      {
+        "company": "Efatainet",
+        "role": "Assistente Administrativo",
+        "period": "Jan 2022 – Ago 2023",
+        "location": "Campinas, SP",
+        "bullets": [
+          "Suporte administrativo com gestão documental e controles internos.",
+          "Construção de planilhas de acompanhamento de indicadores operacionais."
+        ]
+      }
+    ]
+  },
+  "contact": {
+    "title": "Vamos conversar?",
+    "label": "// CONTATO",
+    "subtitle": "Estou aberto a oportunidades, parcerias e bate-papos sobre dados.",
+    "email": "Email",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "cv": "Baixar CV"
+  },
+  "blog": {
+    "title": "Blog",
+    "label": "// EM BREVE",
+    "coming_soon": "Em breve. Estou preparando os primeiros artigos sobre dados, dashboards e curiosidade aplicada.",
+    "terminal_status": "drafting..."
+  },
+  "footer": {
+    "copyright": "© 2026 João Vitor Matos · Construído com curiosidade",
+    "last_update": "last update:",
+    "links": {
+      "about": "Sobre",
+      "projects": "Projetos",
+      "contact": "Contato"
+    }
+  },
+  "common": {
+    "loading": "Carregando...",
+    "back": "Voltar",
+    "open_new_tab": "Abrir em nova aba"
+  }
+}

@@ -1,0 +1,102 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* ── Design tokens ──────────────────────────────────────────── */
+:root {
+  --bg:           #0a0e14;
+  --bg-elevated:  #0f1419;
+  --bg-soft:      #131820;
+  --ink:          #e6e9ef;
+  --ink-soft:     #b3bccc;
+  --ink-mute:     #8b95a7;
+  --line:         #1f2632;
+  --accent:       #00b4a6;
+  --accent-soft:  #1a2e2c;
+  --accent-glow:  rgba(0, 180, 166, 0.25);
+  --warn:         #f59e0b;
+  --error:        #ef4444;
+}
+
+/* ── Tailwind v4 theme extension ────────────────────────────── */
+@theme inline {
+  /* Colors */
+  --color-bg:             var(--bg);
+  --color-bg-elevated:    var(--bg-elevated);
+  --color-bg-soft:        var(--bg-soft);
+  --color-ink:            var(--ink);
+  --color-ink-soft:       var(--ink-soft);
+  --color-ink-mute:       var(--ink-mute);
+  --color-line:           var(--line);
+  --color-accent:         var(--accent);
+  --color-accent-soft:    var(--accent-soft);
+  --color-warn:           var(--warn);
+  --color-error:          var(--error);
+
+  /* Fonts */
+  --font-display:  var(--font-syne), ui-sans-serif, system-ui, sans-serif;
+  --font-mono:     var(--font-space-mono), ui-monospace, monospace;
+  --font-body:     var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans:     var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ── Base styles ─────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Focus ring (acessibilidade) ─────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Selection ───────────────────────────────────────────────── */
+::selection {
+  background-color: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ── Scrollbar (WebKit) ──────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-mute); }
+
+/* ── Cursor piscante (terminal) ──────────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.cursor-blink { animation: blink 1.1s step-end infinite; }
+
+/* ── Dot grid keyframes ──────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

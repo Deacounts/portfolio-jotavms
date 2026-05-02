@@ -1,0 +1,221 @@
+{
+  "nav": {
+    "about": "About",
+    "projects": "Projects",
+    "stack": "Stack",
+    "experience": "Experience",
+    "contact": "Contact",
+    "blog": "Blog",
+    "open_menu": "Open menu",
+    "close_menu": "Close menu"
+  },
+  "hero": {
+    "tag": "// PORTFOLIO · 2026",
+    "headline": "From curiosity to dashboard",
+    "subheadline": "I'm João Vitor — a data analyst in the making, turning questions into visualizations that help you decide.",
+    "cta_primary": "View projects",
+    "cta_secondary": "Download CV",
+    "scroll_hint": "Scroll down",
+    "terminal": {
+      "whoami_label": "whoami",
+      "whoami_value": "João Vitor Matos · Campinas, BR",
+      "stack_label": "stack",
+      "stack_value": "Excel · Power BI · Chart.js · AI",
+      "status_label": "status",
+      "status_value": "learning, building, publishing"
+    }
+  },
+  "about": {
+    "title": "About",
+    "label": "// WHO I AM",
+    "paragraph1": "I started my career in administrative work — managing inventory and building spreadsheets. Along the way I realized: what interests me most isn't the spreadsheet itself, it's the question that comes before it.",
+    "paragraph2": "Today I'm studying Business Process Management and learning data analysis hands-on — building public dashboards with real data, making mistakes, adjusting, publishing. Every project here started as a curiosity and became a visualization.",
+    "paragraph3": "I don't call myself an expert. I call myself someone who's building, in public.",
+    "location_label": "Location",
+    "location_value": "Campinas, SP · Brazil",
+    "studying_label": "Studying",
+    "studying_value": "UNINTER · Business Process Management",
+    "learning_label": "Learning",
+    "learning_value": "Advanced Power BI, Applied AI, SQL",
+    "focus_label": "Focus",
+    "focus_value": "Dashboards, exploratory analysis, processes"
+  },
+  "projects": {
+    "title": "Projects",
+    "label": "// PROOF OF WORK",
+    "subtitle": "Four projects built with real data. Each one started with a question.",
+    "cta": "Open case →",
+    "view_all": "View all projects",
+    "next_project": "Next project",
+    "prev_project": "Previous project",
+    "dashboard_label": "Interactive dashboard",
+    "dashboard_fallback": "If the dashboard doesn't load,",
+    "dashboard_fallback_link": "open in a new tab",
+    "read_time": "min read",
+    "published": "Published",
+    "items": {
+      "financeiro": {
+        "title": "Financial Analysis",
+        "subtitle": "Personal P&L",
+        "tagline": "A profit & loss statement, but personal",
+        "description": "Personal finance control dashboard with monthly revenue and expense tracking, categorization and balance indicators.",
+        "stack": ["HTML", "CSS", "Chart.js"],
+        "question": "How do you visualize personal financial health beyond just the bank balance?",
+        "approach": "I organized income and expense data into categories, built a monthly timeline and calculated balance indicators. The structure follows the logic of a corporate P&L, adapted for a personal context.",
+        "data_source": "Fictional data structured based on real household spending patterns.",
+        "learnings": [
+          "Expense categorization reveals patterns that the final balance hides.",
+          "Visualizing monthly trends is more useful than looking at a snapshot.",
+          "Keeping the structure simple makes continuous updating easier."
+        ],
+        "date": "2025",
+        "read_time": "4"
+      },
+      "people_analytics": {
+        "title": "People Analytics",
+        "subtitle": "HR with data",
+        "tagline": "What the data says about the team",
+        "description": "HR dashboard with headcount, turnover, department distribution and engagement indicators.",
+        "stack": ["HTML", "CSS", "Chart.js"],
+        "question": "How do you present HR data so managers quickly understand the state of the team?",
+        "approach": "I structured metrics in layers: overall headcount view, then turnover by period, then department distribution. The order follows the logic of someone who asks 'how many of us are there?' before 'who left?'.",
+        "data_source": "Synthetic data built from public HR market benchmarks.",
+        "learnings": [
+          "The order of indicators matters as much as the indicators themselves.",
+          "Turnover without context of growth or hiring is incomplete data.",
+          "Distribution charts reveal imbalances that averages hide."
+        ],
+        "date": "2025",
+        "read_time": "4"
+      },
+      "ecommerce": {
+        "title": "E-commerce Sales",
+        "subtitle": "Online sales",
+        "tagline": "Sales, products and purchase patterns",
+        "description": "Commercial performance analysis of an e-commerce operation — best-selling products, buying behavior and revenue evolution.",
+        "stack": ["HTML", "CSS", "Chart.js"],
+        "question": "Which products drive revenue and which purchase patterns repeat?",
+        "approach": "I analyzed sales data by product, channel and period. I crossed average ticket with volume to identify products that are worth more than they seem and those that seem more than they're worth.",
+        "data_source": "Synthetic dataset based on retail e-commerce patterns.",
+        "learnings": [
+          "Best-selling product isn't necessarily the most profitable.",
+          "Seasonality appears clearly when you group by week, not month.",
+          "Average ticket by category says more about the customer than the product."
+        ],
+        "date": "2025",
+        "read_time": "5"
+      },
+      "ibovespa": {
+        "title": "Brazilian Market",
+        "subtitle": "B3 · Ibovespa 2024",
+        "tagline": "How the index behaved in 2024",
+        "description": "Overview of the Brazilian financial market in 2024 — Ibovespa performance, macroeconomic context and key events of the year.",
+        "stack": ["HTML", "CSS", "Chart.js"],
+        "question": "What happened to the Brazilian financial market in 2024 and how do the main indicators relate?",
+        "approach": "I collected verified data from primary sources (Central Bank of Brazil, Agência Brasil, InfoMoney), organized it on a timeline and contextualized index movements with corresponding macroeconomic events.",
+        "data_source": "Banco Central do Brasil, Agência Brasil, InfoMoney. Verified and referenced data.",
+        "learnings": [
+          "Public financial data requires cross-validation between sources.",
+          "Contextualizing numbers with events makes the dashboard analytical, not just descriptive.",
+          "The Ibovespa in 2024 reflected domestic fiscal conditions more than external ones."
+        ],
+        "date": "2025",
+        "read_time": "6"
+      }
+    }
+  },
+  "stack": {
+    "title": "Stack",
+    "label": "// TOOLS",
+    "subtitle": "What I use and learn in practice.",
+    "categories": {
+      "data": {
+        "label": "Data & BI",
+        "items": ["Advanced Excel", "Power BI", "Dashboards", "Chart.js", "KPIs & Metrics", "Data Analysis"]
+      },
+      "process": {
+        "label": "Processes",
+        "items": ["Kaizen", "Project Management", "Inventory Control", "Logistics", "Operational Efficiency"]
+      },
+      "ai": {
+        "label": "AI & Automation",
+        "items": ["Prompt Engineering", "Generative AI", "Azure AI Fundamentals", "Control Automation"]
+      },
+      "frontend": {
+        "label": "Front-end",
+        "items": ["HTML", "CSS", "Git/GitHub"]
+      },
+      "soft": {
+        "label": "Soft Skills",
+        "items": ["Continuous learning", "Analytical thinking", "Attention to detail", "Communication"]
+      }
+    }
+  },
+  "experience": {
+    "title": "Experience",
+    "label": "// CAREER",
+    "cta": "View full resume",
+    "present": "present",
+    "items": [
+      {
+        "company": "Romane Marmoraria",
+        "role": "Internship — Project Manager",
+        "period": "Oct – Nov 2025",
+        "location": "Campinas, SP",
+        "bullets": [
+          "Project management for renovation and finishing work with deadline and supplier control.",
+          "Demand organization and execution follow-up with the operational team."
+        ]
+      },
+      {
+        "company": "Timax",
+        "role": "Inventory Clerk",
+        "period": "Nov 2023 – Nov 2024",
+        "location": "Campinas, SP",
+        "bullets": [
+          "Material intake and output control using tracking spreadsheets.",
+          "Identified inventory turnover patterns that reduced internal stockouts."
+        ]
+      },
+      {
+        "company": "Efatainet",
+        "role": "Administrative Assistant",
+        "period": "Jan 2022 – Aug 2023",
+        "location": "Campinas, SP",
+        "bullets": [
+          "Administrative support with document management and internal controls.",
+          "Built operational indicator tracking spreadsheets."
+        ]
+      }
+    ]
+  },
+  "contact": {
+    "title": "Let's talk?",
+    "label": "// CONTACT",
+    "subtitle": "I'm open to opportunities, partnerships and conversations about data.",
+    "email": "Email",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "cv": "Download CV"
+  },
+  "blog": {
+    "title": "Blog",
+    "label": "// COMING SOON",
+    "coming_soon": "Coming soon. I'm preparing the first articles about data, dashboards and applied curiosity.",
+    "terminal_status": "drafting..."
+  },
+  "footer": {
+    "copyright": "© 2026 João Vitor Matos · Built with curiosity",
+    "last_update": "last update:",
+    "links": {
+      "about": "About",
+      "projects": "Projects",
+      "contact": "Contact"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "back": "Back",
+    "open_new_tab": "Open in new tab"
+  }
+}
