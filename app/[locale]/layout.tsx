@@ -4,6 +4,11 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { DotGrid } from "@/components/ui/DotGrid";
 import "../globals.css";
 
 const syne = Syne({
@@ -74,8 +79,15 @@ export default async function LocaleLayout({
     >
       <body className="min-h-screen bg-bg text-ink font-body antialiased">
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <DotGrid />
+          <Header />
+          <main id="main-content" className="relative z-10">
+            {children}
+          </main>
+          <Footer />
         </NextIntlClientProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
