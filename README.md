@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# João Vitor Matos — Portfólio
 
-## Getting Started
+Portfólio pessoal construído com Next.js 16, Tailwind CSS v4 e next-intl. Bilíngue (PT-BR padrão, EN). Quatro dashboards interativos como case studies.
 
-First, run the development server:
+## Rodar localmente
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse `http://localhost:3000` — redireciona para `/pt` automaticamente.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Estrutura rápida
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+app/[locale]/          → páginas PT e EN
+components/
+  layout/              → Header, Footer, LanguageToggle
+  sections/            → Hero, About, Projects, TechStack, Experience, Contact
+  ui/                  → TerminalBlock, ProjectCard, DashboardEmbed, AnimatedSection, etc.
+content/projects/      → metadados tipados dos 4 projetos
+messages/              → pt.json e en.json (todo texto do site)
+public/
+  dashboards/          → HTMLs dos dashboards (você adiciona)
+  images/projects/     → screenshots dos dashboards (você adiciona)
+  cv/                  → PDF do currículo (você adiciona)
+```
 
-## Learn More
+## Antes de fazer deploy
 
-To learn more about Next.js, take a look at the following resources:
+Leia o `SETUP.md`. Você precisa adicionar manualmente:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. `public/dashboards/financeiro.html`
+2. `public/dashboards/people-analytics.html`
+3. `public/dashboards/ecommerce.html`
+4. `public/dashboards/ibovespa.html`
+5. `public/images/projects/financeiro.png` (1280×720)
+6. `public/images/projects/people-analytics.png`
+7. `public/images/projects/ecommerce.png`
+8. `public/images/projects/ibovespa.png`
+9. `public/cv/Curriculo_Joao_Vitor_Matos.pdf`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploy na Vercel
 
-## Deploy on Vercel
+1. Push para o GitHub
+2. Importe o repositório na Vercel
+3. Adicione a variável de ambiente:
+   - `NEXT_PUBLIC_SITE_URL` = `https://jotavms.vercel.app`
+4. Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Adicionar posts no blog
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Crie arquivos `.mdx` em `content/blog/`:
+
+```mdx
+---
+title: "Título do post"
+date: "2026-01-15"
+description: "Descrição curta"
+---
+
+Conteúdo aqui...
+```
+
+## Alterar textos
+
+Todos os textos do site estão em `messages/pt.json` (português) e `messages/en.json` (inglês). Edite lá e os componentes atualizam automaticamente.
+
+## Stack
+
+- **Next.js 16** + App Router + TypeScript strict
+- **Tailwind CSS v4** (CSS-first, sem tailwind.config.ts)
+- **next-intl v4** com PT-BR e EN
+- **framer-motion** para animações on-scroll
+- **@vercel/analytics** + **@vercel/speed-insights**
+- Deploy: **Vercel**
