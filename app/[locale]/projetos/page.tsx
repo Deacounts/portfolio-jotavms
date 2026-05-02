@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations, getLocale } from "next-intl/server";
+import { getTranslations, getLocale, setRequestLocale } from "next-intl/server";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
@@ -25,7 +25,13 @@ const slugToKey = {
 
 const projectMeta = [financeiro, peopleAnalytics, ecommerce, ibovespa];
 
-export default async function ProjetosPage() {
+export default async function ProjetosPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: localeParam } = await params;
+  setRequestLocale(localeParam);
   const t = await getTranslations("projects");
   const locale = await getLocale();
 

@@ -12,6 +12,7 @@ interface DashboardEmbedProps {
 
 export function DashboardEmbed({ src, title, externalHref }: DashboardEmbedProps) {
   const t = useTranslations("projects");
+  const tCommon = useTranslations("common");
   const [loaded, setLoaded] = useState(false);
 
   return (
@@ -29,26 +30,27 @@ export function DashboardEmbed({ src, title, externalHref }: DashboardEmbedProps
           href={externalHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-ink-mute hover:text-accent transition-colors"
-          aria-label={t("common_open_new_tab" as never) ?? "Abrir em nova aba"}
+          className="text-ink-mute hover:text-accent transition-colors focus-visible:ring-1 focus-visible:ring-accent rounded"
+          aria-label={tCommon("open_new_tab")}
         >
-          <ExternalLink size={12} />
+          <ExternalLink size={12} aria-hidden="true" />
         </a>
       </div>
 
       {/* Iframe container */}
       <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-        {/* Skeleton */}
+        {/* Skeleton loader */}
         {!loaded && (
           <div
             className="absolute inset-0 bg-bg-soft flex flex-col items-center justify-center gap-3"
-            aria-label="Carregando dashboard..."
             role="status"
+            aria-live="polite"
           >
-            <div className="w-8 h-8 border-2 border-line border-t-accent rounded-full animate-spin" />
-            <p className="font-mono text-xs text-ink-mute">
-              {t("common_loading" as never) ?? "Carregando..."}
-            </p>
+            <div
+              className="w-8 h-8 border-2 border-line border-t-accent rounded-full animate-spin"
+              aria-hidden="true"
+            />
+            <p className="font-mono text-xs text-ink-mute">{tCommon("loading")}</p>
           </div>
         )}
 
@@ -72,7 +74,7 @@ export function DashboardEmbed({ src, title, externalHref }: DashboardEmbedProps
             href={externalHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-accent hover:underline"
+            className="text-accent hover:underline focus-visible:ring-1 focus-visible:ring-accent"
           >
             {t("dashboard_fallback_link")}
           </a>

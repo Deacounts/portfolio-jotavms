@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Syne, Space_Mono, Inter } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Header } from "@/components/layout/Header";
@@ -76,6 +76,10 @@ export const metadata: Metadata = {
   },
 };
 
+export function generateStaticParams() {
+  return [{ locale: "pt" }, { locale: "en" }];
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -89,6 +93,7 @@ export default async function LocaleLayout({
     notFound();
   }
 
+  setRequestLocale(locale);
   const messages = await getMessages();
 
   return (
@@ -99,9 +104,18 @@ export default async function LocaleLayout({
     >
       <body className="min-h-screen bg-bg text-ink font-body antialiased">
         <NextIntlClientProvider messages={messages}>
+          {/* Skip to content — visible on focus for keyboard users */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100]
+                       focus:bg-accent focus:text-bg focus:px-4 focus:py-2 focus:rounded
+                       focus:font-mono focus:text-sm focus:font-bold"
+          >
+            Ir para o conteúdo
+          </a>
           <DotGrid />
           <Header />
-          <main id="main-content" className="relative z-10">
+          <main id="main-content" className="relative z-10" tabIndex={-1}>
             {children}
           </main>
           <Footer />

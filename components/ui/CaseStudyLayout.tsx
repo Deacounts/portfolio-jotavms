@@ -45,11 +45,7 @@ export function CaseStudyLayout({
   const locale = useLocale();
   const t = useTranslations("projects");
 
-  const siteBase =
-    typeof window !== "undefined"
-      ? window.location.origin
-      : process.env.NEXT_PUBLIC_SITE_URL ?? "https://jotavms.vercel.app";
-
+  const siteBase = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jotavms.vercel.app";
   const externalHref = `${siteBase}${dashboardFile}`;
 
   return (
