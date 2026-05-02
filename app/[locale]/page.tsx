@@ -1,7 +1,19 @@
+import { Hero } from "@/components/sections/Hero";
+import { About } from "@/components/sections/About";
+import { Projects } from "@/components/sections/Projects";
+import { TechStack } from "@/components/sections/TechStack";
+import { Experience } from "@/components/sections/Experience";
+import { Contact } from "@/components/sections/Contact";
+
 export default function HomePage() {
   return (
-    <main>
-      <p className="text-accent font-mono p-8">// Setup completo. Fase 4 vai montar as seções aqui.</p>
-    </main>
+    <>
+      <Hero />
+      <About />
+      <Projects />
+      <TechStack />
+      <Experience />
+      <Contact />
+    </>
   );
 }
